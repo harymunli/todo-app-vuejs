@@ -16,7 +16,7 @@
       <button @click="removeTodo(index)">Remove</button>
       </li>
     </ul>
-    <h4 v-if="todos.length === 0" >Empty list.</h4>
+    <h4 v-if="todos.length === 0">Empty list.</h4>
   </div>
 </template>
 
@@ -25,29 +25,41 @@ export default {
   data(){
     return {
       new_todo : '',
-      todos : [
+      defaultData : [
         {
-          done: false,
-          content: 'Learn HTML'
+          done: true, content: 'Learn HTML'
         },
         {
-          done: false,
-          content: 'Learn Javascript'
+          done: false, content: 'Learn Vue'
         },
         {
-          done: false,
-          content: 'Learn Vue'
+          done: false, content: 'Have fun'
         }
-      ]        
+      ],
+      lsData : JSON.parse(localStorage.getItem('todos'))     
+    }
+  },
+
+  computed: {
+    todos() {
+      return this.defaultData.length === 0 
+        ? this.lsData
+        : this.defaultData 
     }
   },
   methods: {
+    saveData(){
+      const storageData = JSON.stringify(this.todos);
+      localStorage.setItem('todos', storageData);
+    },
     removeTodo(index) {
       this.todos.splice(index, 1);
+      this.saveData();
     },
     addTodo(){
       this.todos.push({ done: false, content: this.new_todo});
-    },
+      this.saveData()
+    }
   }
 }
 </script>
